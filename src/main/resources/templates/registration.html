@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New User Registration</title>
+</head>
+<body>
+
+<div id="registration-form">
+    <h2>Registration</h2>
+    <form>
+        <div>
+            <label for="firstName">First name:</label>
+            <input type="text" id="firstName" name="firstName">
+        </div>
+        <div>
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div>
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirmPassword">
+        </div>
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<script>
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirm-password");
+    const registerButton = document.querySelector('button[type="submit"]');
+
+    const firstNameError = document.createElement('span');
+    firstNameInput.parentNode.appendChild(firstNameError);
+
+    const lastNameError = document.createElement('span');
+    lastNameInput.parentNode.appendChild(lastNameError);
+
+    const emailError = document.createElement('span');
+    emailInput.parentNode.appendChild(emailError);
+
+    const passwordError = document.createElement('span');
+    passwordInput.parentNode.appendChild(passwordError);
+
+    const confirmPasswordError = document.createElement('span');
+    confirmPasswordInput.parentNode.appendChild(confirmPasswordError);
+
+    function enableDisableRegisterButton() {
+        let isFormValid = true;
+        const isEmailValid = /\S+@\S+\.\S+/.test(emailInput.value);
+        const isPasswordValid = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(passwordInput.value);
+        const isPasswordMatched = passwordInput.value === confirmPasswordInput.value;
+
+        if (!isEmailValid) {
+            emailError.textContent = 'Please enter a valid email address.';
+            isFormValid = false;
+        } else {
+            emailError.textContent = '';
+        }
+
+        if (!isPasswordValid) {
+            passwordError.textContent = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*)';
+            isFormValid = false;
+        } else {
+            passwordError.textContent = '';
+        }
+
+        if (!isPasswordMatched) {
+            confirmPasswordError.textContent = 'Password and confirm password must match.';
+            isFormValid = false;
+        } else {
+            confirmPasswordError.textContent = '';
+        }
+
+        registerButton.disabled = !isFormValid;
+    }
+
+    function handleRegistrationResponse(response) {
+        if (response.status === 200) {
+            alert('Registration successful! Please check your email to confirm your account.');
+            window.location.href = 'http://localhost:8080/api/v1/login';
+        } else {
+            alert('Registration failed. Please try again.');
+        }
+    }
+
+    function handleRegistrationError(error) {
+        alert('Registration failed. Please try again.');
+        console.error(error);
+    }
+
+    function registerUser(event) {
+        event.preventDefault();
+
+        const registrationRequest = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            email: emailInput.value,
+            password: passwordInput.value,
+            confirmPassword: confirmPasswordInput.value,
+        };
+
+        fetch('/api/v1/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(registrationRequest),
+        })
+            .then(handleRegistrationResponse)
+            .catch(handleRegistrationError);
+    }
+
+    firstNameInput.addEventListener("input", enableDisableRegisterButton);
+    lastNameInput.addEventListener("input", enableDisableRegisterButton);
+    emailInput.addEventListener("input", enableDisableRegisterButton);
+    passwordInput.addEventListener("input", enableDisableRegisterButton);
+    confirmPasswordInput.addEventListener("input", enableDisableRegisterButton);
+
+    registerButton.addEventListener('click', registerUser);
+</script>
+
+
+
+</body>
+</html>

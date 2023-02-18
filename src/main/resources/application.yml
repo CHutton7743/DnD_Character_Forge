@@ -6,11 +6,10 @@ server:
 spring:
   datasource:
     password:
-    url: jdbc:postgresql://localhost:5432/registration
-    username:
+    url: jdbc:postgresql://localhost:5432/DnD_Data
   jpa:
     hibernate:
-     ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
