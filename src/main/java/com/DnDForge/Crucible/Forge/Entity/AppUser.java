@@ -4,10 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -31,6 +35,10 @@ public class AppUser implements UserDetails {
     private Role role;
     private boolean enabled = false;
     private boolean locked = false;
+    @CreatedDate
+    private LocalDateTime timeCreated = LocalDateTime.now();
+    @UpdateTimestamp
+    private LocalDateTime timeUpdated;
 
     @OneToMany(targetEntity = Character.class, cascade = CascadeType.ALL)
     private Collection<Character> characters;

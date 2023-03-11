@@ -1,4 +1,4 @@
-package com.DnDForge.Crucible.Forge.Registration;
+package com.DnDForge.Crucible.Forge.APIs.APIComponents;
 
 import com.DnDForge.Crucible.Forge.Entity.ConfirmationToken;
 import com.DnDForge.Crucible.Forge.Repository.ConfirmationTokenRepository;

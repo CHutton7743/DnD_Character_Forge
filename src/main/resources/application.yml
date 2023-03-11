@@ -16,12 +16,16 @@ spring:
         format_sql: true
         show-sql: true
   mail:
-    host: smtp.gmail.com
-    password:
+    host: smtp.office365.com
+    username: "forgednd@outlook.com"
+    password: "bravoplatoon543"
     port: 587
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
           auth: true
           starttls:
             enable: true
+          debug: true

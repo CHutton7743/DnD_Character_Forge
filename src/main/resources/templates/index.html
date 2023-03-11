@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DND Character Forge</title>
+    <script src="./page-resources/index.js"></script>
+</head>
+<body onload="initializePage()">
+<h1>DND Character Forge</h1>
+<!-- Tab buttons -->
+<button class="tab-button active" onclick="openTab(event, 'new-char')">New Character</button>
+<button class="tab-button" onclick="openTab(event, 'char-list')">Character List</button>
+<button class="tab-button" onclick="openTab(event, 'account')">Account Settings</button>
+
+<!-- Tabs -->
+<div id="new-char" class="tab active">
+    <!-- Form for creating a new character -->
+    <form id="form1">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <fieldset>
+            <legend>Character Information:</legend>
+            <label for="race">Race:</label>
+            <select id="race" name="race">
+                <option value="human">Human</option>
+                <option value="elf">Elf</option>
+                <option value="dwarf">Dwarf</option>
+                <option value="halfling">Halfling</option>
+                <option value="dragonborn">Dragonborn</option>
+                <option value="gnome">Gnome</option>
+                <option value="half-elf">Half-Elf</option>
+                <option value="half-orc">Half-Orc</option>
+                <option value="tiefling">Tiefling</option>
+            </select><br>
+
+            <label for="class">Class:</label>
+            <select id="class" name="class">
+                <option value="fighter">Fighter</option>
+                <option value="wizard">Wizard</option>
+                <option value="rogue">Rogue</option>
+                <option value="cleric">Cleric</option>
+                <option value="druid">Druid</option>
+                <option value="bard">Bard</option>
+                <option value="monk">Monk</option>
+                <option value="paladin">Paladin</option>
+                <option value="ranger">Ranger</option>
+                <option value="sorcerer">Sorcerer</option>
+                <option value="warlock">Warlock</option>
+                <option value="artificer">Artificer</option>
+                <option value="barbarian">Barbarian</option>
+            </select><br>
+
+            <label for="level">Level:</label>
+            <input type="number" id="level" name="level" min="1" max="20" value="1"><br>
+
+            <label for="experience">Experience:</label>
+            <input type="number" id="experience" name="experience"><br>
+
+            <label for="alignment">Alignment:</label>
+            <select id="alignment" name="alignment">
+                <option value="lawful-good">Lawful Good</option>
+                <option value="neutral-good">Neutral Good</option>
+                <option value="chaotic-good">Chaotic Good</option>
+                <option value="lawful-neutral">Lawful Neutral</option>
+                <option value="true-neutral">True Neutral</option>
+                <option value="chaotic-neutral">Chaotic Neutral</option>
+                <option value="lawful-evil">Lawful Evil</option>
+                <option value="neutral-evil">Neutral Evil</option>
+                <option value="chaotic-evil">Chaotic Evil</option>
+            </select><br>
+
+            <label for="background">Background:</label>
+            <input type="text" id="background" name="background"><br>
+        </fieldset>
+
+        <input type="button" value="Submit" onclick="characterCreationProcess()">
+    </form>
+</div>
+
+
+<div class="tab" id="char-list">
+    <h2>My Characters</h2>
+    <p>Enter your email address to see a list of your characters:</p>
+    <input type="text" id="email" name="email">
+    <button id="char-list-button">Get Characters</button>
+    <table id="character-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Race</th>
+            <th>Class</th>
+            <th>Level</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Characters will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<div class="tab" id="account-settings">
+    <h2>Account Settings</h2>
+    <button onclick="showChangeEmailForm()">Change Email Address</button>
+    <div id="change-email-form" style="display:none;">
+        <form>
+            <label for="email">New Email Address</label><br>
+            <input type="text" id="new-email" name="new-email"><br>
+            <input type="button" value="Change Email" onclick="changeEmail()">
+        </form>
+    </div>
+    <button onclick="showChangePasswordForm()">Change Password</button>
+    <div id="change-password-form" style="display:none;">
+        <form>
+            <label for="current-password">Current Password</label><br>
+            <input type="password" id="current-password" name="current-password"><br>
+            <label for="new-password">New Password</label><br>
+            <input type="password" id="new-password" name="new-password"><br>
+            <input type="button" value="Change Password" onclick="changePassword()">
+        </form>
+    </div>
+    <button onclick="showChangeUsernameForm()">Change Username</button>
+    <div id="change-username-form" style="display:none;">
+        <form>
+            <label for="username">New Username</label><br>
+            <input type="text" id="new-username" name="new-username"><br>
+            <input type="button" value="Change Username" onclick="changeUsername()">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

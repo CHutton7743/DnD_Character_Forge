@@ -10,8 +10,20 @@ import java.io.IOException;
 import java.util.List;
 
 public class Forge {
-    public PDDocument addPrimaryInformation(PrimaryInformation primaryInformation) throws IOException {
-        PDDocument newCharacter = PDDocument.load(new File("src/main/resources/templates/5E_CharacterSheet_Fillable.pdf"));
+    public PDDocument createCharacter(PrimaryInformation primaryInformation, BaseStats baseStats, BaseStatModifiers baseStatModifiers,
+                                      RPFeatures rpFeatures, Equipment equipment, FeaturesAndTraits featuresAndTraits, OtherProficiencies otherProficiencies, RPFields rpFields) throws IOException {
+        PDDocument character = PDDocument.load(new File("src/main/resources/templates/5E_CharacterSheet_Fillable.pdf"));
+        character = addPrimaryInformation(character, primaryInformation);
+        character = addPrimaryStats(character, baseStats);
+        character = addSavingThrows(character, baseStatModifiers);
+        character = addRPFields(character, rpFields);
+        character = addEquipment(character, equipment);
+        character = addFeaturesAndTraits(character, featuresAndTraits);
+        character = addOtherProficiencies(character, otherProficiencies);
+
+        return character;
+    }
+    public PDDocument addPrimaryInformation(PDDocument newCharacter,PrimaryInformation primaryInformation) throws IOException {
         PDAcroForm form = newCharacter.getDocumentCatalog().getAcroForm();
         List<PDField> fields = form.getFields();
         for (PDField field : fields) {

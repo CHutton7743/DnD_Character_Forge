@@ -1,10 +1,15 @@
-package com.DnDForge.Crucible.Forge.Entity;
+package com.DnDForge.Crucible.Forge.APIs.APIComponents;
 
-import com.DnDForge.Crucible.Forge.Registration.ConfirmationTokenService;
+import com.DnDForge.Crucible.Forge.APIs.APIComponents.ConfirmationTokenService;
+import com.DnDForge.Crucible.Forge.APIs.Requests.ChangeEmailRequest;
+import com.DnDForge.Crucible.Forge.APIs.Requests.ChangePasswordRequest;
+import com.DnDForge.Crucible.Forge.APIs.Requests.ChangeUserNameRequest;
+import com.DnDForge.Crucible.Forge.Entity.AppUser;
+import com.DnDForge.Crucible.Forge.Entity.ConfirmationToken;
 import com.DnDForge.Crucible.Forge.Repository.UserRepository;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -53,4 +58,37 @@ public class UserService implements UserDetailsService {
                 UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
         user.setEnabled(true);
     }
+
+    public boolean checkIfPasswordMatches(UserDetails user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public boolean checkIfEmailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or #email == authentication.principal.username")
+    public void changePassword(ChangePasswordRequest request) {
+        AppUser user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new
+                UsernameNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or #email == authentication.principal.username")
+    public void changeEmail(ChangeEmailRequest request) {
+        AppUser user = userRepository.findByEmail(request.getOldEmail()).orElseThrow(() -> new
+                UsernameNotFoundException(String.format(USER_NOT_FOUND, request.getOldEmail())));
+        user.setEmail(request.getNewEmail());
+        userRepository.save(user);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or #email == authentication.principal.username")
+    public void changeUserName(ChangeUserNameRequest request) {
+        AppUser user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new
+                UsernameNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
+        user.setUserName(request.getUsername());
+        userRepository.save(user);
+    }
+
 }
