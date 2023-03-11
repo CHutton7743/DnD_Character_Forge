@@ -24,39 +24,31 @@ public class LoginAPI {
         return "login";
     }
 
-    @PostMapping("/api/v1/login/submit")
-    public String login(LoginRequest loginRequest, BindingResult bindingResult, HttpSession session) {
-        String admin = "admin@localhost";
-        if (loginRequest.getEmail().equals(admin) && loginRequest.getPassword().equals("admin")) {
-            // Authentication succeeded, create session
-            session.setAttribute("userDetails", userService.loadUserByUsername(loginRequest.getEmail()));
-            session.setAttribute("isAdmin", true);
-            return "redirect:/api/v1/home";
-        }
-        // Authenticate the user
-        UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
-        if (null != userDetails || !userService.checkIfPasswordMatches(userDetails, loginRequest.getPassword())) {
-            // authentication failed, redirect back to login page with error message
-            return "redirect:/api/v1/login";
-        }
-
-        // Authentication succeeded, create session
-        session.setAttribute("userDetails", userDetails);
-        session.setAttribute("isAdmin", userDetails.getUsername().equals(admin));
-
-        return "redirect:/api/v1/home";
+    @GetMapping("/api/v1/home")
+    public String home() {
+        return "index";
     }
 
-    @GetMapping("/api/v1/home")
-    public String home(HttpSession session) {
-        // Get the user details from the session
-        UserDetails userDetails = (UserDetails) session.getAttribute("userDetails");
-
-        if (userDetails == null) {
-            // If user is not authenticated, redirect back to login page
-            return "redirect:/api/v1/login";
+    @PostMapping("/api/v1/login/submit")
+    public String login(@Validated LoginRequest loginRequest, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            // Handle validation errors
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials");
+            return "login";
         }
-        return "index";
+        // Get the user details from the database
+        UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
+
+        // Check if the password is correct
+        if (userService.checkIfPasswordMatches(userDetails, loginRequest.getPassword())) {
+            // If the password is correct, add the user details to the session
+            session.setAttribute("userDetails", userDetails);
+            return "index";
+        } else {
+            // If the password is incorrect, redirect back to the login page
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials");
+            return "login";
+        }
     }
 
 }

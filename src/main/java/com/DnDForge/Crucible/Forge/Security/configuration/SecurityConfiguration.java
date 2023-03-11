@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authorize) -> authorize
                         //login and registration endpoints
                         .requestMatchers("/api/v*/registration/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/login/submit").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/login/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/confirm/**").permitAll()
 
@@ -50,7 +51,6 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasRole("ADMIN"))
                 .formLogin(form -> form
                         .loginPage("/api/v1/login")
-                        .loginProcessingUrl("/api/v1/login")
                         .defaultSuccessUrl("/api/v1/home", true)
                         .failureUrl("/api/v1/login?error=true")
                         .permitAll())
